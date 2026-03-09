@@ -16,7 +16,21 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
 body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 50% 35% at 5% 10%,rgba(58,142,232,.07) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 95% 90%,rgba(176,58,232,.06) 0%,transparent 60%); pointer-events:none; z-index:0; }
 .wrap { max-width:980px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1; }
 
-header { padding:52px 0 36px; border-bottom:1px solid var(--border); margin-bottom:36px; animation:fadeUp .6s ease both; }
+/* SYNC BAR */
+.sync-bar { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 16px; margin-bottom:20px; margin-top:20px; }
+.sync-dot { width:8px; height:8px; border-radius:50%; background:var(--muted); flex-shrink:0; transition:background .3s; }
+.sync-dot.synced { background:#3ac87a; box-shadow:0 0 6px #3ac87a; }
+.sync-dot.syncing { background:var(--gold); animation:pulse 1s infinite; }
+.sync-dot.error { background:var(--speak); }
+.sync-label { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--muted); flex:1; }
+.sync-user { font-family:'DM Mono',monospace; font-size:.68rem; color:var(--read); }
+.btn-login { background:var(--gold); color:#000; border:none; padding:6px 14px; border-radius:7px; font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.btn-login:hover { background:#f0d060; }
+.btn-logout { background:transparent; color:var(--muted); border:1px solid var(--border); padding:6px 14px; border-radius:7px; font-size:.75rem; cursor:pointer; transition:all .2s; }
+.btn-logout:hover { border-color:var(--speak); color:var(--speak); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+header { padding:32px 0 36px; border-bottom:1px solid var(--border); margin-bottom:36px; animation:fadeUp .6s ease both; }
 .header-row { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px; }
 .eyebrow { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
 h1 { font-family:'Fraunces',serif; font-size:clamp(2.2rem,5vw,3.5rem); font-weight:900; line-height:1.05; letter-spacing:-1px; }
@@ -104,22 +118,18 @@ h1 em { font-style:italic; color:var(--gold); }
 .mo-btn.active { background:var(--text); color:var(--bg); border-color:var(--text); }
 .mo-btn.completed { border-color:rgba(58,200,122,.5); color:#3ac87a; }
 .mo-btn.current { border-color:var(--gold); color:var(--gold); }
-
 .month-panel { display:none; animation:fadeUp .3s ease both; }
 .month-panel.active { display:block; }
 .mo-header { display:flex; align-items:baseline; gap:16px; margin-bottom:26px; }
 .mo-num { font-family:'Fraunces',serif; font-size:4.5rem; font-weight:900; line-height:1; color:var(--border); }
 .mo-title { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:700; margin-bottom:4px; }
 .mo-goal { font-size:.82rem; color:var(--muted); font-style:italic; }
-
 .skills-quad { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px; }
 @media(max-width:560px){ .skills-quad{grid-template-columns:1fr;} }
 .sq-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; transition:transform .2s; }
 .sq-card:hover { transform:translateY(-2px); }
-.sq-card.speak { border-top:3px solid var(--speak); }
-.sq-card.listen { border-top:3px solid var(--listen); }
-.sq-card.read { border-top:3px solid var(--read); }
-.sq-card.write { border-top:3px solid var(--write); }
+.sq-card.speak { border-top:3px solid var(--speak); } .sq-card.listen { border-top:3px solid var(--listen); }
+.sq-card.read { border-top:3px solid var(--read); } .sq-card.write { border-top:3px solid var(--write); }
 .sq-skill { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
 .sq-card.speak .sq-skill { color:var(--speak); } .sq-card.listen .sq-skill { color:var(--listen); }
 .sq-card.read .sq-skill { color:var(--read); } .sq-card.write .sq-skill { color:var(--write); }
@@ -127,7 +137,6 @@ h1 em { font-style:italic; color:var(--gold); }
 .sq-tasks li { font-size:.83rem; color:var(--text); padding:5px 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
 .sq-tasks li:last-child { border-bottom:none; }
 .sq-tasks li::before { content:'→'; color:var(--muted); font-size:.7rem; margin-top:2px; flex-shrink:0; font-family:'DM Mono',monospace; }
-
 .time-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:14px; }
 .time-card-title { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
 .time-items { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
@@ -135,12 +144,10 @@ h1 em { font-style:italic; color:var(--gold); }
 .ti { text-align:center; padding:10px; border-radius:10px; background:var(--surface2); }
 .ti-amt { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:900; display:block; margin-bottom:4px; }
 .ti-lbl { font-size:.7rem; color:var(--muted); }
-
 .tools-card { background:var(--text); color:var(--bg); border-radius:14px; padding:18px 20px; margin-bottom:28px; }
 .tools-card-title { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
 .tool-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .tool-chip { padding:5px 12px; border-radius:20px; font-size:.75rem; font-family:'DM Mono',monospace; border:1px solid rgba(0,0,0,.12); background:rgba(0,0,0,.07); color:var(--bg); }
-
 .mo-done-row { display:flex; justify-content:flex-end; margin-bottom:28px; }
 .btn-month-done { padding:9px 20px; border-radius:9px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.8rem; font-weight:500; cursor:pointer; transition:all .2s; }
 .btn-month-done:hover { border-color:#3ac87a; color:#3ac87a; }
@@ -181,6 +188,15 @@ h1 em { font-style:italic; color:var(--gold); }
 </head>
 <body>
 <div class="wrap">
+
+<!-- SYNC BAR -->
+<div class="sync-bar">
+  <div class="sync-dot" id="sync-dot"></div>
+  <span class="sync-label" id="sync-label">Non connecté — connexion pour synchroniser</span>
+  <span class="sync-user" id="sync-user"></span>
+  <button class="btn-login" id="btn-login" onclick="loginGoogle()">🔑 Se connecter avec Google</button>
+  <button class="btn-logout" id="btn-logout" style="display:none" onclick="logoutUser()">Déconnexion</button>
+</div>
 
 <header>
   <div class="header-row">
@@ -251,12 +267,108 @@ h1 em { font-style:italic; color:var(--gold); }
 
 <!-- IMMERSION -->
 <div id="tab-immersion" class="panel">
-  <div class="sec-title">Habitudes d'immersion — activer celles que tu fais déjà</div>
+  <div class="sec-title">Habitudes d'immersion</div>
   <div class="imm-grid" id="imm-grid"></div>
 </div>
 
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBAj9z0p0-nihym9AJrkO8P7MXQfHpuud0",
+  authDomain: "english-tracker-e1cd2.firebaseapp.com",
+  projectId: "english-tracker-e1cd2",
+  storageBucket: "english-tracker-e1cd2.firebasestorage.app",
+  messagingSenderId: "1034176187096",
+  appId: "1:1034176187096:web:52f4379da8911afb9a25ad"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let unsubscribe = null;
+
+window.loginGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    setSyncStatus('syncing', 'Connexion en cours…');
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    setSyncStatus('error', 'Erreur de connexion');
+    toast('Erreur de connexion 😕');
+  }
+};
+
+window.logoutUser = async () => {
+  await signOut(auth);
+  toast('Déconnecté');
+};
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('btn-login').style.display = 'none';
+    document.getElementById('btn-logout').style.display = 'block';
+    document.getElementById('sync-user').textContent = user.email;
+    setSyncStatus('syncing', 'Chargement de vos données…');
+
+    // Load data from Firestore
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      S = { ...S, ...snap.data() };
+      renderAll();
+    }
+
+    // Listen for real-time changes
+    if (unsubscribe) unsubscribe();
+    unsubscribe = onSnapshot(ref, (snap) => {
+      if (snap.exists()) {
+        S = { ...S, ...snap.data() };
+        renderAll();
+        setSyncStatus('synced', 'Synchronisé ✓');
+      }
+    });
+
+    setSyncStatus('synced', 'Synchronisé sur tous vos appareils ✓');
+    toast('Connecté ! Données synchronisées 🔄');
+  } else {
+    currentUser = null;
+    if (unsubscribe) unsubscribe();
+    document.getElementById('btn-login').style.display = 'block';
+    document.getElementById('btn-logout').style.display = 'none';
+    document.getElementById('sync-user').textContent = '';
+    setSyncStatus('', 'Non connecté — données sauvegardées localement');
+  }
+});
+
+window.syncToFirebase = async () => {
+  if (!currentUser) return;
+  setSyncStatus('syncing', 'Sauvegarde…');
+  try {
+    const ref = doc(db, 'users', currentUser.uid);
+    await setDoc(ref, S, { merge: true });
+    setSyncStatus('synced', 'Synchronisé sur tous vos appareils ✓');
+  } catch(e) {
+    setSyncStatus('error', 'Erreur de sauvegarde');
+  }
+};
+
+function setSyncStatus(type, msg) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot' + (type ? ' '+type : '');
+  lbl.textContent = msg;
+}
+</script>
 
 <script>
 const MONTHS = [
@@ -266,57 +378,51 @@ const MONTHS = [
     read:["Lire des articles tech en anglais (TechCrunch, Wired)","10 nouveaux mots/jour avec Anki (flashcards)","Changer la langue de son téléphone en anglais"],
     write:["Écrire son journal intime en anglais (5 phrases/jour)","Utiliser ChatGPT pour corriger ses textes","Faire des exercices de grammaire (Perfect vs Preterit)"],
     time:[{c:"var(--listen)",t:"20'",l:"Écoute active"},{c:"var(--speak)",t:"10'",l:"Speaking"},{c:"var(--read)",t:"10'",l:"Lecture + Anki"},{c:"var(--write)",t:"10'",l:"Journal"}],
-    tools:["Anki (gratuit)","BBC Learning English","Language Transfer","Netflix VO","ChatGPT correction"]
-  },
+    tools:["Anki (gratuit)","BBC Learning English","Language Transfer","Netflix VO","ChatGPT correction"]},
   { n:2, title:"Immersion Intensive", goal:"Penser en anglais, fluidité orale basique, lecture sans dictionnaire",
     speak:["Premiers échanges avec un tandem linguistique (Tandem app)","Monologue de 5 min sur un sujet tech / actualité","Répéter des TED Talks par segments de 30 secondes"],
     listen:["Monter la difficulté : podcasts tech normaux (Lex Fridman)","Séries sans sous-titres 5 min/épisode (progressif)","YouTube en anglais sur ses sujets favoris"],
     read:["Lire un livre facile en anglais (ex: \"Who Moved My Cheese\")","Newsletter tech quotidienne : Morning Brew, TLDR","Augmenter Anki à 15 mots/jour"],
     write:["Rédiger ses emails d'alternance en anglais (brouillon)","Poster sur LinkedIn en anglais (1×/semaine)","Écrire un résumé d'article lu chaque semaine"],
     time:[{c:"var(--listen)",t:"15'",l:"Écoute"},{c:"var(--speak)",t:"15'",l:"Speaking / tandem"},{c:"var(--read)",t:"10'",l:"Lecture"},{c:"var(--write)",t:"10'",l:"Écriture"}],
-    tools:["Tandem app","Lex Fridman Podcast","Morning Brew","TED Talks","HelloTalk"]
-  },
+    tools:["Tandem app","Lex Fridman Podcast","Morning Brew","TED Talks","HelloTalk"]},
   { n:3, title:"Anglais Professionnel", goal:"Maîtriser le vocabulaire tech/data, réunions en anglais, écrire pro",
     speak:["Simuler des entretiens en anglais (avec ChatGPT ou Tandem)","Présenter un projet pro en anglais (3–5 min)","Vocabulaire de réunion : \"to circle back\", \"take offline\"…"],
     listen:["Podcasts tech pro : \"The TWIML AI Podcast\", \"Data Skeptic\"","Réunions fictives en anglais sur YouTube","Écouter des conférences type Google I/O, AWS re:Invent"],
     read:["Documentation technique en anglais (GitHub, Stack Overflow)","Lire des offres d'emploi en anglais et analyser le vocab","Papers ML/Data accessibles (Distill.pub)"],
     write:["Rédiger un CV en anglais (version internationale)","Écrire des messages Slack pro en anglais","Lettres de motivation en anglais"],
     time:[{c:"var(--listen)",t:"15'",l:"Écoute pro"},{c:"var(--speak)",t:"15'",l:"Entretiens"},{c:"var(--read)",t:"10'",l:"Docs tech"},{c:"var(--write)",t:"10'",l:"CV / emails"}],
-    tools:["ChatGPT entretiens","Distill.pub","Data Skeptic podcast","Grammarly","LinkedIn EN"]
-  },
+    tools:["ChatGPT entretiens","Distill.pub","Data Skeptic podcast","Grammarly","LinkedIn EN"]},
   { n:4, title:"Fluidité & Confiance", goal:"Parler sans chercher ses mots, comprendre les accents variés",
     speak:["Sessions Italki avec un prof natif (1×/semaine)","Débattre d'un sujet avec un tandem 20 min","Raconter une histoire sans préparer (improvisation)"],
     listen:["Accents variés : anglais indien, australien, américain sud","Podcasts rapides, argot : \"Stuff You Should Know\"","Écouter sans sous-titres une série complète"],
     read:["Roman plus complexe : \"The Martian\" ou \"Ready Player One\"","Lire des threads Twitter/X tech en anglais","Réviser en anglais pour ses cours d'école"],
     write:["Rédiger un article de blog tech (Medium) en anglais","Contribuer à un projet open-source (issues GitHub)","Écrire sans correcteur automatique et corriger après"],
     time:[{c:"var(--speak)",t:"20'",l:"Italki / débat"},{c:"var(--listen)",t:"15'",l:"Accents"},{c:"var(--read)",t:"10'",l:"Roman"},{c:"var(--write)",t:"10'",l:"Article"}],
-    tools:["Italki (prof natif)","Stuff You Should Know","GitHub open source","Medium EN","Speechling"]
-  },
+    tools:["Italki (prof natif)","Stuff You Should Know","GitHub open source","Medium EN","Speechling"]},
   { n:5, title:"Niveau B2 Consolidé", goal:"Exprimer des nuances, humour, opinions complexes — préparer certification",
     speak:["Rejoindre un club de conversation en ligne (Meetup.com)","Répondre à des questions d'entretien STAR en anglais","Exprimer une opinion nuancée (\"I'd argue that…\")"],
     listen:["Films sans sous-titres du tout","Podcasts humoristiques : comprendre l'humour anglophone","Interviews rapides de personnalités tech"],
     read:["The Economist ou MIT Technology Review","Lire des études de cas business en anglais","Pratiquer des exercices IELTS/TOEIC Reading"],
     write:["Dissertation argumentée : pour/contre un sujet tech","Exercices IELTS/TOEIC Writing","Emails complexes avec diplomatisme et nuances"],
     time:[{c:"var(--speak)",t:"20'",l:"Conversation"},{c:"var(--listen)",t:"15'",l:"Films"},{c:"var(--read)",t:"10'",l:"Presse"},{c:"var(--write)",t:"10'",l:"Dissertation"}],
-    tools:["MIT Tech Review","Meetup conversation","TOEIC practice","The Economist","Elsa Speak"]
-  },
+    tools:["MIT Tech Review","Meetup conversation","TOEIC practice","The Economist","Elsa Speak"]},
   { n:6, title:"Sprint Final & Certification", goal:"Passer le TOEIC / IELTS, simuler un entretien d'embauche complet",
     speak:["Mock interview complet avec feedback (Pramp, Interviewing.io)","Pitch de 2 min sur son parcours pro en anglais","Simuler l'oral IELTS / TOEIC Speaking"],
     listen:["Tests blancs TOEIC Listening (×3)","Podcasts à vitesse 1.25×–1.5×","Simuler des conditions d'exam réelles"],
     read:["Tests blancs TOEIC / IELTS Reading chronométrés","Stratégies : skimming, scanning, lecture rapide","Analyser ses erreurs et retravailler les points faibles"],
     write:["Essais chronométrés (45 min, comme à l'exam)","Réviser les connecteurs logiques et transitions","Relire et peaufiner son CV + LM anglais final"],
     time:[{c:"var(--speak)",t:"20'",l:"Mock interview"},{c:"var(--listen)",t:"15'",l:"Tests blancs"},{c:"var(--read)",t:"15'",l:"Reading exam"},{c:"var(--write)",t:"10'",l:"Essais"}],
-    tools:["TOEIC (785+ = B2)","IELTS Academic","Cambridge B2 First","Duolingo English Test"]
-  }
+    tools:["TOEIC (785+ = B2)","IELTS Academic","Cambridge B2 First","Duolingo English Test"]}
 ];
 
 const ACTIVITIES = [
-  {id:"anki",    title:"Anki / Flashcards",               meta:"10–15 min", tag:"read",   tl:"Lecture"},
+  {id:"anki",    title:"Anki / Flashcards",                meta:"10–15 min", tag:"read",   tl:"Lecture"},
   {id:"speaking",title:"Speaking / Shadowing (voix haute)",meta:"10–20 min", tag:"speak",  tl:"Speaking"},
-  {id:"listening",title:"Podcast ou vidéo en anglais",    meta:"15–20 min", tag:"listen", tl:"Écoute"},
-  {id:"writing", title:"Journal / écriture en anglais",   meta:"10 min",    tag:"write",  tl:"Écriture"},
-  {id:"reading", title:"Lecture d'un article ou livre",   meta:"10 min",    tag:"read",   tl:"Lecture"},
-  {id:"grammar", title:"Grammaire / exercices",           meta:"10 min",    tag:"write",  tl:"Écriture"}
+  {id:"listening",title:"Podcast ou vidéo en anglais",     meta:"15–20 min", tag:"listen", tl:"Écoute"},
+  {id:"writing", title:"Journal / écriture en anglais",    meta:"10 min",    tag:"write",  tl:"Écriture"},
+  {id:"reading", title:"Lecture d'un article ou livre",    meta:"10 min",    tag:"read",   tl:"Lecture"},
+  {id:"grammar", title:"Grammaire / exercices",            meta:"10 min",    tag:"write",  tl:"Écriture"}
 ];
 
 const SKILLS_DEF = [
@@ -335,23 +441,15 @@ const IMMERSION = [
   {id:"work",   icon:"💼", name:"Alternance en anglais", desc:"Demander à rédiger docs, emails, rapports en anglais à votre tuteur"}
 ];
 
-function ls() { try { return JSON.parse(localStorage.getItem('eng6')||'{}'); } catch { return {}; } }
-function sv(s) { localStorage.setItem('eng6', JSON.stringify(s)); }
-
-let S = ls();
-if (!S.skills)       S.skills = {speaking:20,listening:25,reading:30,writing:20};
-if (!S.days)         S.days = {};
-if (!S.acts)         S.acts = {};
-if (!S.words)        S.words = [];
-if (!S.notes)        S.notes = {};
-if (!S.monthsDone)   S.monthsDone = {};
-if (!S.curMonth)     S.curMonth = 1;
-if (!S.immersion)    S.immersion = {};
-if (!S.totalMins)    S.totalMins = 0;
-if (!S.sessions)     S.sessions = 0;
+let S = {
+  skills:{speaking:20,listening:25,reading:30,writing:20},
+  days:{}, acts:{}, words:[], notes:{}, monthsDone:{}, curMonth:1, immersion:{}, totalMins:0, sessions:0
+};
 
 const today = new Date();
 const todayKey = today.toISOString().split('T')[0];
+document.getElementById('today-tag').textContent = today.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+document.getElementById('notes-lbl').textContent = todayKey;
 
 function switchTab(id,btn) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -360,53 +458,54 @@ function switchTab(id,btn) {
   btn.classList.add('active');
 }
 
-document.getElementById('today-tag').textContent = today.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-document.getElementById('notes-lbl').textContent = todayKey;
+function renderAll() {
+  renderWeek(); renderActivities(); renderSkillBars(); renderVocab(); renderImmersion(); buildPlan(); updateStats(); updateStreak();
+  document.getElementById('daily-notes').value = S.notes[todayKey]||'';
+}
 
 function renderWeek() {
-  const grid = document.getElementById('week-row');
-  const days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-  const base = new Date(today);
-  base.setDate(base.getDate() - ((base.getDay()+6)%7));
-  let done = 0, html = '';
-  for (let i=0;i<7;i++) {
-    const d = new Date(base); d.setDate(base.getDate()+i);
-    const k = d.toISOString().split('T')[0];
-    const isT = k===todayKey, isDone=!!S.days[k], isPast=d<today&&!isT, missed=isPast&&!isDone;
-    if (isDone) done++;
-    html += `<div class="day-box ${isT?'today':''} ${isDone?'done':''} ${missed?'missed':''}" onclick="toggleDay('${k}')">
+  const grid=document.getElementById('week-row');
+  const days=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const base=new Date(today); base.setDate(base.getDate()-((base.getDay()+6)%7));
+  let done=0,html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(base); d.setDate(base.getDate()+i);
+    const k=d.toISOString().split('T')[0];
+    const isT=k===todayKey,isDone=!!S.days[k],isPast=d<today&&!isT,missed=isPast&&!isDone;
+    if(isDone)done++;
+    html+=`<div class="day-box ${isT?'today':''} ${isDone?'done':''} ${missed?'missed':''}" onclick="toggleDay('${k}')">
       <div class="day-nm">${days[i]}</div><div class="day-n">${d.getDate()}</div>
       <span class="day-ico">${isDone?'✅':isT?'◉':'○'}</span></div>`;
   }
-  grid.innerHTML = html;
-  document.getElementById('s-week').textContent = done+'/7';
+  grid.innerHTML=html;
+  document.getElementById('s-week').textContent=done+'/7';
 }
 
 function toggleDay(k) {
-  if (S.days[k]) { delete S.days[k]; } else {
+  if(S.days[k]){delete S.days[k];}else{
     S.days[k]=true;
-    if (k===todayKey&&!S.markedToday) { S.sessions++; S.totalMins+=50; S.markedToday=true; }
+    if(k===todayKey&&!S.markedToday){S.sessions++;S.totalMins+=50;S.markedToday=true;}
   }
-  sv(S); renderWeek(); updateStats(); updateStreak();
+  renderWeek();updateStats();updateStreak();sync();
 }
 
 function updateStats() {
-  document.getElementById('s-sessions').textContent = S.sessions;
-  document.getElementById('s-words').textContent = S.words.length;
-  document.getElementById('s-time').textContent = Math.round(S.totalMins/60*10)/10+'h';
+  document.getElementById('s-sessions').textContent=S.sessions;
+  document.getElementById('s-words').textContent=S.words.length;
+  document.getElementById('s-time').textContent=Math.round(S.totalMins/60*10)/10+'h';
 }
 
 function updateStreak() {
-  let n=0; const d=new Date(today);
-  while(true){const k=d.toISOString().split('T')[0]; if(S.days[k]){n++;d.setDate(d.getDate()-1);}else break;}
+  let n=0;const d=new Date(today);
+  while(true){const k=d.toISOString().split('T')[0];if(S.days[k]){n++;d.setDate(d.getDate()-1);}else break;}
   document.getElementById('streak-badge').textContent='🔥 '+n+' jour(s) de suite';
 }
 
 function renderActivities() {
   const tmap={speak:'t-speak',listen:'t-listen',read:'t-read',write:'t-write'};
-  document.getElementById('act-list').innerHTML = ACTIVITIES.map(a=>{
+  document.getElementById('act-list').innerHTML=ACTIVITIES.map(a=>{
     const done=!!(S.acts[a.id]&&S.acts[a.id][todayKey]);
-    return `<div class="act-item ${done?'done':''}" onclick="toggleAct('${a.id}')">
+    return`<div class="act-item ${done?'done':''}" onclick="toggleAct('${a.id}')">
       <div class="act-check">${done?'✓':''}</div>
       <div class="act-body"><div class="act-title">${a.title}</div><div class="act-meta">⏱ ${a.meta}</div></div>
       <span class="act-tag ${tmap[a.tag]}">${a.tl}</span></div>`;
@@ -414,43 +513,43 @@ function renderActivities() {
 }
 
 function toggleAct(id) {
-  if (!S.acts[id]) S.acts[id]={};
-  if (S.acts[id][todayKey]) { delete S.acts[id][todayKey]; } else {
-    S.acts[id][todayKey]=true; S.totalMins+=15;
+  if(!S.acts[id])S.acts[id]={};
+  if(S.acts[id][todayKey]){delete S.acts[id][todayKey];}else{
+    S.acts[id][todayKey]=true;S.totalMins+=15;
     const m={anki:'reading',speaking:'speaking',listening:'listening',writing:'writing',reading:'reading',grammar:'writing'};
-    if (m[id]) S.skills[m[id]]=Math.min(98,S.skills[m[id]]+1);
+    if(m[id])S.skills[m[id]]=Math.min(98,S.skills[m[id]]+1);
     toast('Activité cochée ! 🎉');
   }
-  sv(S); renderActivities(); renderSkillBars(); updateStats();
+  renderActivities();renderSkillBars();updateStats();sync();
 }
 
 function renderSkillBars() {
-  document.getElementById('skill-bars').innerHTML = SKILLS_DEF.map(s=>{
+  document.getElementById('skill-bars').innerHTML=SKILLS_DEF.map(s=>{
     const v=S.skills[s.id]||0;
-    return `<div class="skill-bar-card" onclick="boostSkill('${s.id}')">
+    return`<div class="skill-bar-card" onclick="boostSkill('${s.id}')">
       <div class="sb-top"><div class="sb-name"><span>${s.icon}</span>${s.label}</div>
       <span class="sb-pct" style="color:${s.color}">${v}%</span></div>
       <div class="sb-track"><div class="sb-fill" style="width:${v}%;background:${s.color}"></div></div>
-      <div class="sb-hint">Cliquer pour +5% · objectif 75–85%</div></div>`;
+      <div class="sb-hint">Cliquer pour +5%</div></div>`;
   }).join('');
 }
 
 function boostSkill(id) {
-  S.skills[id]=Math.min(98,S.skills[id]+5); sv(S); renderSkillBars();
-  toast(SKILLS_DEF.find(s=>s.id===id).label+' : '+S.skills[id]+'% 📈');
+  S.skills[id]=Math.min(98,S.skills[id]+5);renderSkillBars();
+  toast(SKILLS_DEF.find(s=>s.id===id).label+' : '+S.skills[id]+'% 📈');sync();
 }
 
-const notesEl = document.getElementById('daily-notes');
-notesEl.value = S.notes[todayKey]||'';
-function saveNotes() { S.notes[todayKey]=notesEl.value; sv(S); toast('Notes sauvegardées ✓'); }
+function saveNotes() {
+  S.notes[todayKey]=document.getElementById('daily-notes').value;
+  sync();toast('Notes sauvegardées ✓');
+}
 
-// PLAN
 function buildPlan() {
-  document.getElementById('month-tabs').innerHTML = MONTHS.map(m=>{
-    const done=!!S.monthsDone[m.n], cur=m.n===S.curMonth;
-    return `<button class="mo-btn ${done?'completed':cur?'current':''}" id="mo-tab-${m.n}" onclick="showMonth(${m.n})">${done?'✓ ':''}Mois ${m.n}</button>`;
+  document.getElementById('month-tabs').innerHTML=MONTHS.map(m=>{
+    const done=!!S.monthsDone[m.n],cur=m.n===S.curMonth;
+    return`<button class="mo-btn ${done?'completed':cur?'current':''}" id="mo-tab-${m.n}" onclick="showMonth(${m.n})">${done?'✓ ':''}Mois ${m.n}</button>`;
   }).join('');
-  document.getElementById('months-container').innerHTML = MONTHS.map(m=>`
+  document.getElementById('months-container').innerHTML=MONTHS.map(m=>`
     <div class="month-panel" id="mo-panel-${m.n}">
       <div class="mo-header"><div class="mo-num">0${m.n}</div>
         <div><div class="mo-title">${m.title}</div><div class="mo-goal">${m.goal}</div></div></div>
@@ -460,9 +559,9 @@ function buildPlan() {
         <div class="sq-card read"><div class="sq-skill">📖 Reading</div><ul class="sq-tasks">${m.read.map(t=>`<li>${t}</li>`).join('')}</ul></div>
         <div class="sq-card write"><div class="sq-skill">✍️ Writing</div><ul class="sq-tasks">${m.write.map(t=>`<li>${t}</li>`).join('')}</ul></div>
       </div>
-      <div class="time-card"><div class="time-card-title">⏱ Budget temps journalier recommandé</div>
+      <div class="time-card"><div class="time-card-title">⏱ Budget temps journalier</div>
         <div class="time-items">${m.time.map(t=>`<div class="ti"><span class="ti-amt" style="color:${t.c}">${t.t}</span><span class="ti-lbl">${t.l}</span></div>`).join('')}</div></div>
-      <div class="tools-card"><div class="tools-card-title">🔧 Outils recommandés ce mois</div>
+      <div class="tools-card"><div class="tools-card-title">🔧 Outils recommandés</div>
         <div class="tool-chips">${m.tools.map(t=>`<span class="tool-chip">${t}</span>`).join('')}</div></div>
       <div class="mo-done-row">
         <button class="btn-month-done ${S.monthsDone[m.n]?'done':''}" onclick="toggleMonthDone(${m.n})">
@@ -479,61 +578,58 @@ function showMonth(n) {
 }
 
 function toggleMonthDone(n) {
-  if (S.monthsDone[n]) { delete S.monthsDone[n]; } else {
-    S.monthsDone[n]=true;
-    if (n===S.curMonth&&n<6) S.curMonth=n+1;
-    toast('Mois '+n+' terminé ! 🏆');
+  if(S.monthsDone[n]){delete S.monthsDone[n];}else{
+    S.monthsDone[n]=true;if(n===S.curMonth&&n<6)S.curMonth=n+1;toast('Mois '+n+' terminé ! 🏆');
   }
-  sv(S); buildPlan();
+  sync();buildPlan();
 }
 
-// VOCAB
 function addWord() {
   const w=document.getElementById('vi-word').value.trim();
   const d=document.getElementById('vi-def').value.trim();
-  if (!w) return;
-  S.words.push({w,d,date:todayKey}); sv(S);
-  document.getElementById('vi-word').value='';
-  document.getElementById('vi-def').value='';
-  renderVocab(); updateStats(); toast('"'+w+'" ajouté ! 📚');
+  if(!w)return;
+  S.words.push({w,d,date:todayKey});
+  document.getElementById('vi-word').value='';document.getElementById('vi-def').value='';
+  renderVocab();updateStats();sync();toast('"'+w+'" ajouté ! 📚');
 }
 
-function removeWord(i) { S.words.splice(i,1); sv(S); renderVocab(); updateStats(); }
+function removeWord(i){S.words.splice(i,1);renderVocab();updateStats();sync();}
 
 function renderVocab() {
-  document.getElementById('vocab-count').textContent = S.words.length+' mot(s) enregistré(s)';
-  document.getElementById('vocab-chips').innerHTML = [...S.words].reverse().slice(0,60).map((item,ri)=>{
+  document.getElementById('vocab-count').textContent=S.words.length+' mot(s)';
+  document.getElementById('vocab-chips').innerHTML=[...S.words].reverse().slice(0,60).map((item,ri)=>{
     const idx=S.words.length-1-ri;
-    return `<div class="vchip"><span class="vw">${item.w}</span>${item.d?`<span class="vd">— ${item.d}</span>`:''}<span class="vdel" onclick="removeWord(${idx})">✕</span></div>`;
+    return`<div class="vchip"><span class="vw">${item.w}</span>${item.d?`<span class="vd">— ${item.d}</span>`:''}<span class="vdel" onclick="removeWord(${idx})">✕</span></div>`;
   }).join('');
 }
 
 document.getElementById('vi-word').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('vi-def').focus();});
 document.getElementById('vi-def').addEventListener('keydown',e=>{if(e.key==='Enter')addWord();});
 
-// IMMERSION
 function renderImmersion() {
-  document.getElementById('imm-grid').innerHTML = IMMERSION.map(im=>`
+  document.getElementById('imm-grid').innerHTML=IMMERSION.map(im=>`
     <div class="imm-card ${S.immersion[im.id]?'on':''}" onclick="toggleImm('${im.id}')">
       <div class="imm-ico">${im.icon}</div><div class="imm-name">${im.name}</div>
       <div class="imm-desc">${im.desc}</div><div class="imm-on">✓ Activé</div></div>`).join('');
 }
 
-function toggleImm(id) {
-  S.immersion[id]=!S.immersion[id]; sv(S); renderImmersion();
-  toast(S.immersion[id]?'Habitude activée 🌍':'Habitude désactivée');
+function toggleImm(id){S.immersion[id]=!S.immersion[id];renderImmersion();sync();toast(S.immersion[id]?'Habitude activée 🌍':'Désactivée');}
+
+function sync() { if(window.syncToFirebase) window.syncToFirebase(); }
+
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-function toast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400);
-}
+// Expose globally
+window.saveNotes=saveNotes;window.addWord=addWord;window.removeWord=removeWord;
+window.toggleDay=toggleDay;window.toggleAct=toggleAct;window.boostSkill=boostSkill;
+window.showMonth=showMonth;window.toggleMonthDone=toggleMonthDone;window.toggleImm=toggleImm;
+window.switchTab=switchTab;window.S=S;
 
-// BOOT
-renderWeek(); renderActivities(); renderSkillBars(); renderVocab(); renderImmersion(); buildPlan(); updateStats(); updateStreak();
-setTimeout(()=>{
-  document.querySelectorAll('.sb-fill').forEach(el=>{const w=el.style.width;el.style.width='0%';setTimeout(()=>{el.style.width=w;},80);});
-},200);
+renderAll();
+setTimeout(()=>{document.querySelectorAll('.sb-fill').forEach(el=>{const w=el.style.width;el.style.width='0%';setTimeout(()=>{el.style.width=w;},80);});},200);
 </script>
 </body>
 </html>
