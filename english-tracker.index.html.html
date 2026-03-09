@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Progress — B1 → B2/C1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0c0c10; --surface: #14141c; --surface2: #1c1c28; --border: #272735;
+  --speak: #e8503a; --listen: #3a8ee8; --read: #3ac87a; --write: #b03ae8;
+  --gold: #e8c547; --text: #eeeef5; --muted: #6b6b8a; --dim: #303048;
+}
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 50% 35% at 5% 10%,rgba(58,142,232,.07) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 95% 90%,rgba(176,58,232,.06) 0%,transparent 60%); pointer-events:none; z-index:0; }
+.wrap { max-width:980px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1; }
+
+header { padding:52px 0 36px; border-bottom:1px solid var(--border); margin-bottom:36px; animation:fadeUp .6s ease both; }
+.header-row { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px; }
+.eyebrow { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+h1 { font-family:'Fraunces',serif; font-size:clamp(2.2rem,5vw,3.5rem); font-weight:900; line-height:1.05; letter-spacing:-1px; }
+h1 em { font-style:italic; color:var(--gold); }
+.hero-sub { font-size:.88rem; color:var(--muted); margin-top:12px; font-weight:300; border-left:2px solid var(--border); padding-left:14px; line-height:1.7; max-width:440px; }
+.level-pills { display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+.level-pill { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 18px; text-align:center; }
+.level-pill .lbl { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:3px; }
+.level-pill .val { font-family:'Fraunces',serif; font-size:1.6rem; font-weight:900; line-height:1; }
+.val.start { color:var(--speak); } .val.target { color:var(--gold); }
+
+.tabs { display:flex; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:5px; margin-bottom:36px; flex-wrap:wrap; animation:fadeUp .6s .1s ease both; }
+.tab-btn { flex:1; min-width:80px; padding:9px 14px; border-radius:8px; border:none; background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+
+.panel { display:none; animation:fadeUp .35s ease both; }
+.panel.active { display:block; }
+
+.date-bar { display:flex; align-items:center; gap:12px; margin-bottom:28px; flex-wrap:wrap; }
+.today-tag { font-family:'DM Mono',monospace; font-size:.75rem; color:#3ac87a; background:rgba(58,200,122,.08); border:1px solid rgba(58,200,122,.2); padding:5px 14px; border-radius:20px; }
+.streak-badge { margin-left:auto; font-family:'DM Mono',monospace; font-size:.78rem; color:var(--gold); background:rgba(232,197,71,.08); border:1px solid rgba(232,197,71,.2); padding:5px 14px; border-radius:20px; }
+
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:36px; }
+@media(max-width:600px){ .stats-row{grid-template-columns:repeat(2,1fr);} }
+.stat-box { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 16px; transition:border-color .2s,transform .2s; }
+.stat-box:hover { border-color:var(--dim); transform:translateY(-2px); }
+.stat-icon { font-size:1.2rem; margin-bottom:10px; display:block; }
+.stat-val { font-family:'Fraunces',serif; font-size:1.9rem; font-weight:900; line-height:1; }
+.stat-lbl { font-size:.72rem; color:var(--muted); margin-top:5px; }
+
+.week-row { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:36px; }
+@media(max-width:560px){ .week-row{grid-template-columns:repeat(4,1fr);} }
+.day-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 8px; text-align:center; cursor:pointer; transition:all .2s; user-select:none; }
+.day-box:hover { border-color:var(--gold); }
+.day-box.today { border-color:rgba(58,200,122,.5); background:rgba(58,200,122,.04); }
+.day-box.done { border-color:rgba(58,200,122,.4); background:rgba(58,200,122,.06); }
+.day-box.missed { opacity:.45; }
+.day-nm { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.day-n { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:900; }
+.day-box.today .day-n, .day-box.done .day-n { color:#3ac87a; }
+.day-ico { font-size:.85rem; margin-top:4px; display:block; }
+
+.sec-title { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; display:flex; align-items:center; gap:12px; }
+.sec-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.act-list { margin-bottom:36px; }
+.act-item { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--surface); border:1px solid var(--border); border-radius:12px; margin-bottom:8px; cursor:pointer; transition:all .2s; user-select:none; }
+.act-item:hover { border-color:var(--dim); transform:translateX(3px); }
+.act-item.done { border-color:rgba(58,200,122,.3); background:rgba(58,200,122,.03); }
+.act-check { width:22px; height:22px; border-radius:7px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.85rem; flex-shrink:0; transition:all .2s; }
+.act-item.done .act-check { background:#3ac87a; border-color:#3ac87a; }
+.act-body { flex:1; }
+.act-title { font-size:.88rem; font-weight:500; margin-bottom:2px; }
+.act-item.done .act-title { text-decoration:line-through; color:var(--muted); }
+.act-meta { font-family:'DM Mono',monospace; font-size:.67rem; color:var(--muted); }
+.act-tag { padding:3px 10px; border-radius:20px; font-family:'DM Mono',monospace; font-size:.62rem; font-weight:500; letter-spacing:.5px; text-transform:uppercase; flex-shrink:0; }
+.t-speak { background:rgba(232,80,58,.12); color:var(--speak); border:1px solid rgba(232,80,58,.2); }
+.t-listen { background:rgba(58,142,232,.12); color:var(--listen); border:1px solid rgba(58,142,232,.2); }
+.t-read { background:rgba(58,200,122,.12); color:var(--read); border:1px solid rgba(58,200,122,.2); }
+.t-write { background:rgba(176,58,232,.12); color:var(--write); border:1px solid rgba(176,58,232,.2); }
+
+.skills-bars { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:36px; }
+@media(max-width:560px){ .skills-bars{grid-template-columns:1fr;} }
+.skill-bar-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; cursor:pointer; transition:border-color .2s,transform .2s; }
+.skill-bar-card:hover { border-color:var(--gold); transform:translateY(-2px); }
+.sb-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.sb-name { display:flex; align-items:center; gap:8px; font-size:.88rem; font-weight:500; }
+.sb-pct { font-family:'DM Mono',monospace; font-size:.82rem; }
+.sb-track { height:7px; background:var(--surface2); border-radius:20px; overflow:hidden; margin-bottom:8px; }
+.sb-fill { height:100%; border-radius:20px; transition:width .8s cubic-bezier(.4,0,.2,1); }
+.sb-hint { font-family:'DM Mono',monospace; font-size:.65rem; color:var(--muted); }
+
+.notes-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:36px; }
+.notes-card textarea { width:100%; background:transparent; border:none; outline:none; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.88rem; line-height:1.7; resize:none; min-height:90px; }
+.notes-card textarea::placeholder { color:var(--dim); }
+.notes-foot { display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+.notes-lbl { font-family:'DM Mono',monospace; font-size:.65rem; color:var(--muted); }
+.btn-save { background:var(--gold); color:#000; border:none; padding:7px 18px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; }
+.btn-save:hover { background:#f0d060; transform:translateY(-1px); }
+
+.month-tabs { display:flex; gap:6px; margin-bottom:28px; flex-wrap:wrap; }
+.mo-btn { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Mono',monospace; font-size:.75rem; cursor:pointer; transition:all .2s; }
+.mo-btn:hover { color:var(--text); border-color:var(--dim); }
+.mo-btn.active { background:var(--text); color:var(--bg); border-color:var(--text); }
+.mo-btn.completed { border-color:rgba(58,200,122,.5); color:#3ac87a; }
+.mo-btn.current { border-color:var(--gold); color:var(--gold); }
+
+.month-panel { display:none; animation:fadeUp .3s ease both; }
+.month-panel.active { display:block; }
+.mo-header { display:flex; align-items:baseline; gap:16px; margin-bottom:26px; }
+.mo-num { font-family:'Fraunces',serif; font-size:4.5rem; font-weight:900; line-height:1; color:var(--border); }
+.mo-title { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:700; margin-bottom:4px; }
+.mo-goal { font-size:.82rem; color:var(--muted); font-style:italic; }
+
+.skills-quad { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px; }
+@media(max-width:560px){ .skills-quad{grid-template-columns:1fr;} }
+.sq-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; transition:transform .2s; }
+.sq-card:hover { transform:translateY(-2px); }
+.sq-card.speak { border-top:3px solid var(--speak); }
+.sq-card.listen { border-top:3px solid var(--listen); }
+.sq-card.read { border-top:3px solid var(--read); }
+.sq-card.write { border-top:3px solid var(--write); }
+.sq-skill { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+.sq-card.speak .sq-skill { color:var(--speak); } .sq-card.listen .sq-skill { color:var(--listen); }
+.sq-card.read .sq-skill { color:var(--read); } .sq-card.write .sq-skill { color:var(--write); }
+.sq-tasks { list-style:none; }
+.sq-tasks li { font-size:.83rem; color:var(--text); padding:5px 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
+.sq-tasks li:last-child { border-bottom:none; }
+.sq-tasks li::before { content:'→'; color:var(--muted); font-size:.7rem; margin-top:2px; flex-shrink:0; font-family:'DM Mono',monospace; }
+
+.time-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:14px; }
+.time-card-title { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+.time-items { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+@media(max-width:500px){ .time-items{grid-template-columns:repeat(2,1fr);} }
+.ti { text-align:center; padding:10px; border-radius:10px; background:var(--surface2); }
+.ti-amt { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:900; display:block; margin-bottom:4px; }
+.ti-lbl { font-size:.7rem; color:var(--muted); }
+
+.tools-card { background:var(--text); color:var(--bg); border-radius:14px; padding:18px 20px; margin-bottom:28px; }
+.tools-card-title { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+.tool-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.tool-chip { padding:5px 12px; border-radius:20px; font-size:.75rem; font-family:'DM Mono',monospace; border:1px solid rgba(0,0,0,.12); background:rgba(0,0,0,.07); color:var(--bg); }
+
+.mo-done-row { display:flex; justify-content:flex-end; margin-bottom:28px; }
+.btn-month-done { padding:9px 20px; border-radius:9px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.8rem; font-weight:500; cursor:pointer; transition:all .2s; }
+.btn-month-done:hover { border-color:#3ac87a; color:#3ac87a; }
+.btn-month-done.done { background:rgba(58,200,122,.1); border-color:rgba(58,200,122,.4); color:#3ac87a; }
+
+.vocab-input-row { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+.v-input { flex:1; min-width:140px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:11px 16px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.88rem; outline:none; transition:border-color .2s; }
+.v-input:focus { border-color:var(--gold); }
+.v-input::placeholder { color:var(--dim); }
+.btn-add { background:var(--write); color:#fff; border:none; padding:11px 20px; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.btn-add:hover { opacity:.85; transform:translateY(-1px); }
+.vocab-count { font-family:'DM Mono',monospace; font-size:.72rem; color:var(--muted); margin-bottom:16px; }
+.vocab-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.vchip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:7px 14px; font-size:.82rem; display:flex; align-items:center; gap:8px; animation:popIn .2s ease; }
+.vchip:hover { border-color:rgba(232,80,58,.3); }
+.vchip .vw { font-family:'DM Mono',monospace; color:#3ac87a; font-size:.85rem; }
+.vchip .vd { color:var(--muted); font-size:.76rem; }
+.vchip .vdel { color:var(--dim); cursor:pointer; font-size:.8rem; margin-left:4px; transition:color .2s; }
+.vchip .vdel:hover { color:var(--speak); }
+
+.imm-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:36px; }
+@media(max-width:600px){ .imm-grid{grid-template-columns:repeat(2,1fr);} }
+.imm-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px 16px; cursor:pointer; transition:all .2s; user-select:none; }
+.imm-card:hover { transform:translateY(-3px); border-color:var(--gold); }
+.imm-card.on { border-color:rgba(58,200,122,.5); background:rgba(58,200,122,.04); }
+.imm-ico { font-size:1.6rem; margin-bottom:10px; }
+.imm-name { font-size:.88rem; font-weight:600; margin-bottom:6px; }
+.imm-desc { font-size:.76rem; color:var(--muted); line-height:1.5; }
+.imm-on { margin-top:10px; font-family:'DM Mono',monospace; font-size:.62rem; color:#3ac87a; display:none; }
+.imm-card.on .imm-on { display:block; }
+
+.toast { position:fixed; bottom:28px; right:28px; background:var(--surface); border:1px solid #3ac87a; color:#3ac87a; padding:10px 18px; border-radius:10px; font-family:'DM Mono',monospace; font-size:.8rem; opacity:0; transform:translateY(8px); transition:all .28s; pointer-events:none; z-index:200; }
+.toast.show { opacity:1; transform:translateY(0); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes popIn { from{opacity:0;transform:scale(.85)} to{opacity:1;transform:scale(1)} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">✦ Plan personnalisé · Étudiant en alternance · France</div>
+      <h1>Anglais fluent<br>en <em>6 mois</em></h1>
+      <p class="hero-sub">45 min/jour suffisent si elles sont bien utilisées.<br>Chaque compétence a sa stratégie.</p>
+    </div>
+    <div class="level-pills">
+      <div class="level-pill"><span class="lbl">Niveau actuel</span><span class="val start">B1</span></div>
+      <div style="text-align:center;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted)">↓</div>
+      <div class="level-pill"><span class="lbl">Objectif</span><span class="val target">B2/C1</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('plan',this)">🗓 Plan 6 mois</button>
+  <button class="tab-btn" onclick="switchTab('vocab',this)">📚 Vocabulaire</button>
+  <button class="tab-btn" onclick="switchTab('immersion',this)">🌍 Immersion</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="tab-dashboard" class="panel active">
+  <div class="date-bar">
+    <span class="today-tag" id="today-tag"></span>
+    <span class="streak-badge" id="streak-badge">🔥 0 jour(s)</span>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><span class="stat-icon">✅</span><div class="stat-val" id="s-sessions">0</div><div class="stat-lbl">Sessions</div></div>
+    <div class="stat-box"><span class="stat-icon">📚</span><div class="stat-val" id="s-words">0</div><div class="stat-lbl">Mots appris</div></div>
+    <div class="stat-box"><span class="stat-icon">⏱</span><div class="stat-val" id="s-time">0h</div><div class="stat-lbl">Temps total</div></div>
+    <div class="stat-box"><span class="stat-icon">📅</span><div class="stat-val" id="s-week">0/7</div><div class="stat-lbl">Cette semaine</div></div>
+  </div>
+  <div class="sec-title">Cette semaine</div>
+  <div class="week-row" id="week-row"></div>
+  <div class="sec-title">Activités du jour</div>
+  <div class="act-list" id="act-list"></div>
+  <div class="sec-title">Compétences</div>
+  <div class="skills-bars" id="skill-bars"></div>
+  <div class="sec-title">Notes du jour</div>
+  <div class="notes-card">
+    <textarea id="daily-notes" placeholder="Notez vos progrès, mots difficiles, ressenti du jour…"></textarea>
+    <div class="notes-foot">
+      <span class="notes-lbl" id="notes-lbl"></span>
+      <button class="btn-save" onclick="saveNotes()">Sauvegarder ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLAN -->
+<div id="tab-plan" class="panel">
+  <div class="month-tabs" id="month-tabs"></div>
+  <div id="months-container"></div>
+</div>
+
+<!-- VOCAB -->
+<div id="tab-vocab" class="panel">
+  <div class="vocab-input-row">
+    <input class="v-input" id="vi-word" placeholder="Mot en anglais…" />
+    <input class="v-input" id="vi-def" placeholder="Définition / traduction…" />
+    <button class="btn-add" onclick="addWord()">+ Ajouter</button>
+  </div>
+  <div class="vocab-count" id="vocab-count">0 mot(s)</div>
+  <div class="vocab-chips" id="vocab-chips"></div>
+</div>
+
+<!-- IMMERSION -->
+<div id="tab-immersion" class="panel">
+  <div class="sec-title">Habitudes d'immersion — activer celles que tu fais déjà</div>
+  <div class="imm-grid" id="imm-grid"></div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const MONTHS = [
+  { n:1, title:"Fondations & Habitudes", goal:"Installer la routine, vocabulaire quotidien, accent + écoute active",
+    speak:["Parler à voix haute 10 min/jour (décrire sa journée en anglais)","S'enregistrer et réécouter pour identifier ses erreurs","Shadowing : répéter des podcasts en imitant l'accent"],
+    listen:["Podcasts lents : BBC Learning English, 6 Minute English","Regarder une série en VO sous-titrée EN (pas FR !)","Écouter en faisant la vaisselle, les transports"],
+    read:["Lire des articles tech en anglais (TechCrunch, Wired)","10 nouveaux mots/jour avec Anki (flashcards)","Changer la langue de son téléphone en anglais"],
+    write:["Écrire son journal intime en anglais (5 phrases/jour)","Utiliser ChatGPT pour corriger ses textes","Faire des exercices de grammaire (Perfect vs Preterit)"],
+    time:[{c:"var(--listen)",t:"20'",l:"Écoute active"},{c:"var(--speak)",t:"10'",l:"Speaking"},{c:"var(--read)",t:"10'",l:"Lecture + Anki"},{c:"var(--write)",t:"10'",l:"Journal"}],
+    tools:["Anki (gratuit)","BBC Learning English","Language Transfer","Netflix VO","ChatGPT correction"]
+  },
+  { n:2, title:"Immersion Intensive", goal:"Penser en anglais, fluidité orale basique, lecture sans dictionnaire",
+    speak:["Premiers échanges avec un tandem linguistique (Tandem app)","Monologue de 5 min sur un sujet tech / actualité","Répéter des TED Talks par segments de 30 secondes"],
+    listen:["Monter la difficulté : podcasts tech normaux (Lex Fridman)","Séries sans sous-titres 5 min/épisode (progressif)","YouTube en anglais sur ses sujets favoris"],
+    read:["Lire un livre facile en anglais (ex: \"Who Moved My Cheese\")","Newsletter tech quotidienne : Morning Brew, TLDR","Augmenter Anki à 15 mots/jour"],
+    write:["Rédiger ses emails d'alternance en anglais (brouillon)","Poster sur LinkedIn en anglais (1×/semaine)","Écrire un résumé d'article lu chaque semaine"],
+    time:[{c:"var(--listen)",t:"15'",l:"Écoute"},{c:"var(--speak)",t:"15'",l:"Speaking / tandem"},{c:"var(--read)",t:"10'",l:"Lecture"},{c:"var(--write)",t:"10'",l:"Écriture"}],
+    tools:["Tandem app","Lex Fridman Podcast","Morning Brew","TED Talks","HelloTalk"]
+  },
+  { n:3, title:"Anglais Professionnel", goal:"Maîtriser le vocabulaire tech/data, réunions en anglais, écrire pro",
+    speak:["Simuler des entretiens en anglais (avec ChatGPT ou Tandem)","Présenter un projet pro en anglais (3–5 min)","Vocabulaire de réunion : \"to circle back\", \"take offline\"…"],
+    listen:["Podcasts tech pro : \"The TWIML AI Podcast\", \"Data Skeptic\"","Réunions fictives en anglais sur YouTube","Écouter des conférences type Google I/O, AWS re:Invent"],
+    read:["Documentation technique en anglais (GitHub, Stack Overflow)","Lire des offres d'emploi en anglais et analyser le vocab","Papers ML/Data accessibles (Distill.pub)"],
+    write:["Rédiger un CV en anglais (version internationale)","Écrire des messages Slack pro en anglais","Lettres de motivation en anglais"],
+    time:[{c:"var(--listen)",t:"15'",l:"Écoute pro"},{c:"var(--speak)",t:"15'",l:"Entretiens"},{c:"var(--read)",t:"10'",l:"Docs tech"},{c:"var(--write)",t:"10'",l:"CV / emails"}],
+    tools:["ChatGPT entretiens","Distill.pub","Data Skeptic podcast","Grammarly","LinkedIn EN"]
+  },
+  { n:4, title:"Fluidité & Confiance", goal:"Parler sans chercher ses mots, comprendre les accents variés",
+    speak:["Sessions Italki avec un prof natif (1×/semaine)","Débattre d'un sujet avec un tandem 20 min","Raconter une histoire sans préparer (improvisation)"],
+    listen:["Accents variés : anglais indien, australien, américain sud","Podcasts rapides, argot : \"Stuff You Should Know\"","Écouter sans sous-titres une série complète"],
+    read:["Roman plus complexe : \"The Martian\" ou \"Ready Player One\"","Lire des threads Twitter/X tech en anglais","Réviser en anglais pour ses cours d'école"],
+    write:["Rédiger un article de blog tech (Medium) en anglais","Contribuer à un projet open-source (issues GitHub)","Écrire sans correcteur automatique et corriger après"],
+    time:[{c:"var(--speak)",t:"20'",l:"Italki / débat"},{c:"var(--listen)",t:"15'",l:"Accents"},{c:"var(--read)",t:"10'",l:"Roman"},{c:"var(--write)",t:"10'",l:"Article"}],
+    tools:["Italki (prof natif)","Stuff You Should Know","GitHub open source","Medium EN","Speechling"]
+  },
+  { n:5, title:"Niveau B2 Consolidé", goal:"Exprimer des nuances, humour, opinions complexes — préparer certification",
+    speak:["Rejoindre un club de conversation en ligne (Meetup.com)","Répondre à des questions d'entretien STAR en anglais","Exprimer une opinion nuancée (\"I'd argue that…\")"],
+    listen:["Films sans sous-titres du tout","Podcasts humoristiques : comprendre l'humour anglophone","Interviews rapides de personnalités tech"],
+    read:["The Economist ou MIT Technology Review","Lire des études de cas business en anglais","Pratiquer des exercices IELTS/TOEIC Reading"],
+    write:["Dissertation argumentée : pour/contre un sujet tech","Exercices IELTS/TOEIC Writing","Emails complexes avec diplomatisme et nuances"],
+    time:[{c:"var(--speak)",t:"20'",l:"Conversation"},{c:"var(--listen)",t:"15'",l:"Films"},{c:"var(--read)",t:"10'",l:"Presse"},{c:"var(--write)",t:"10'",l:"Dissertation"}],
+    tools:["MIT Tech Review","Meetup conversation","TOEIC practice","The Economist","Elsa Speak"]
+  },
+  { n:6, title:"Sprint Final & Certification", goal:"Passer le TOEIC / IELTS, simuler un entretien d'embauche complet",
+    speak:["Mock interview complet avec feedback (Pramp, Interviewing.io)","Pitch de 2 min sur son parcours pro en anglais","Simuler l'oral IELTS / TOEIC Speaking"],
+    listen:["Tests blancs TOEIC Listening (×3)","Podcasts à vitesse 1.25×–1.5×","Simuler des conditions d'exam réelles"],
+    read:["Tests blancs TOEIC / IELTS Reading chronométrés","Stratégies : skimming, scanning, lecture rapide","Analyser ses erreurs et retravailler les points faibles"],
+    write:["Essais chronométrés (45 min, comme à l'exam)","Réviser les connecteurs logiques et transitions","Relire et peaufiner son CV + LM anglais final"],
+    time:[{c:"var(--speak)",t:"20'",l:"Mock interview"},{c:"var(--listen)",t:"15'",l:"Tests blancs"},{c:"var(--read)",t:"15'",l:"Reading exam"},{c:"var(--write)",t:"10'",l:"Essais"}],
+    tools:["TOEIC (785+ = B2)","IELTS Academic","Cambridge B2 First","Duolingo English Test"]
+  }
+];
+
+const ACTIVITIES = [
+  {id:"anki",    title:"Anki / Flashcards",               meta:"10–15 min", tag:"read",   tl:"Lecture"},
+  {id:"speaking",title:"Speaking / Shadowing (voix haute)",meta:"10–20 min", tag:"speak",  tl:"Speaking"},
+  {id:"listening",title:"Podcast ou vidéo en anglais",    meta:"15–20 min", tag:"listen", tl:"Écoute"},
+  {id:"writing", title:"Journal / écriture en anglais",   meta:"10 min",    tag:"write",  tl:"Écriture"},
+  {id:"reading", title:"Lecture d'un article ou livre",   meta:"10 min",    tag:"read",   tl:"Lecture"},
+  {id:"grammar", title:"Grammaire / exercices",           meta:"10 min",    tag:"write",  tl:"Écriture"}
+];
+
+const SKILLS_DEF = [
+  {id:"speaking",  icon:"🗣️", label:"Speaking",  color:"var(--speak)"},
+  {id:"listening", icon:"👂", label:"Listening", color:"var(--listen)"},
+  {id:"reading",   icon:"📖", label:"Reading",   color:"var(--read)"},
+  {id:"writing",   icon:"✍️", label:"Writing",   color:"var(--write)"}
+];
+
+const IMMERSION = [
+  {id:"phone",  icon:"📱", name:"Téléphone en anglais",  desc:"Interface, Siri/Google, notifications — 50× lectures passives/jour"},
+  {id:"gaming", icon:"🎮", name:"Gaming en VO",          desc:"Jeux en anglais = dialogues, lore, chat avec joueurs étrangers"},
+  {id:"music",  icon:"🎵", name:"Musique + lyrics",      desc:"Chercher les paroles et comprendre le sens — mémorisation naturelle"},
+  {id:"think",  icon:"💬", name:"Penser en anglais",     desc:"Se parler à soi-même en anglais : commenter sa journée dans sa tête"},
+  {id:"tandem", icon:"🤝", name:"Tandem / Meetup",       desc:"Trouver un natif qui veut apprendre le français — échange win-win"},
+  {id:"work",   icon:"💼", name:"Alternance en anglais", desc:"Demander à rédiger docs, emails, rapports en anglais à votre tuteur"}
+];
+
+function ls() { try { return JSON.parse(localStorage.getItem('eng6')||'{}'); } catch { return {}; } }
+function sv(s) { localStorage.setItem('eng6', JSON.stringify(s)); }
+
+let S = ls();
+if (!S.skills)       S.skills = {speaking:20,listening:25,reading:30,writing:20};
+if (!S.days)         S.days = {};
+if (!S.acts)         S.acts = {};
+if (!S.words)        S.words = [];
+if (!S.notes)        S.notes = {};
+if (!S.monthsDone)   S.monthsDone = {};
+if (!S.curMonth)     S.curMonth = 1;
+if (!S.immersion)    S.immersion = {};
+if (!S.totalMins)    S.totalMins = 0;
+if (!S.sessions)     S.sessions = 0;
+
+const today = new Date();
+const todayKey = today.toISOString().split('T')[0];
+
+function switchTab(id,btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+document.getElementById('today-tag').textContent = today.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+document.getElementById('notes-lbl').textContent = todayKey;
+
+function renderWeek() {
+  const grid = document.getElementById('week-row');
+  const days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const base = new Date(today);
+  base.setDate(base.getDate() - ((base.getDay()+6)%7));
+  let done = 0, html = '';
+  for (let i=0;i<7;i++) {
+    const d = new Date(base); d.setDate(base.getDate()+i);
+    const k = d.toISOString().split('T')[0];
+    const isT = k===todayKey, isDone=!!S.days[k], isPast=d<today&&!isT, missed=isPast&&!isDone;
+    if (isDone) done++;
+    html += `<div class="day-box ${isT?'today':''} ${isDone?'done':''} ${missed?'missed':''}" onclick="toggleDay('${k}')">
+      <div class="day-nm">${days[i]}</div><div class="day-n">${d.getDate()}</div>
+      <span class="day-ico">${isDone?'✅':isT?'◉':'○'}</span></div>`;
+  }
+  grid.innerHTML = html;
+  document.getElementById('s-week').textContent = done+'/7';
+}
+
+function toggleDay(k) {
+  if (S.days[k]) { delete S.days[k]; } else {
+    S.days[k]=true;
+    if (k===todayKey&&!S.markedToday) { S.sessions++; S.totalMins+=50; S.markedToday=true; }
+  }
+  sv(S); renderWeek(); updateStats(); updateStreak();
+}
+
+function updateStats() {
+  document.getElementById('s-sessions').textContent = S.sessions;
+  document.getElementById('s-words').textContent = S.words.length;
+  document.getElementById('s-time').textContent = Math.round(S.totalMins/60*10)/10+'h';
+}
+
+function updateStreak() {
+  let n=0; const d=new Date(today);
+  while(true){const k=d.toISOString().split('T')[0]; if(S.days[k]){n++;d.setDate(d.getDate()-1);}else break;}
+  document.getElementById('streak-badge').textContent='🔥 '+n+' jour(s) de suite';
+}
+
+function renderActivities() {
+  const tmap={speak:'t-speak',listen:'t-listen',read:'t-read',write:'t-write'};
+  document.getElementById('act-list').innerHTML = ACTIVITIES.map(a=>{
+    const done=!!(S.acts[a.id]&&S.acts[a.id][todayKey]);
+    return `<div class="act-item ${done?'done':''}" onclick="toggleAct('${a.id}')">
+      <div class="act-check">${done?'✓':''}</div>
+      <div class="act-body"><div class="act-title">${a.title}</div><div class="act-meta">⏱ ${a.meta}</div></div>
+      <span class="act-tag ${tmap[a.tag]}">${a.tl}</span></div>`;
+  }).join('');
+}
+
+function toggleAct(id) {
+  if (!S.acts[id]) S.acts[id]={};
+  if (S.acts[id][todayKey]) { delete S.acts[id][todayKey]; } else {
+    S.acts[id][todayKey]=true; S.totalMins+=15;
+    const m={anki:'reading',speaking:'speaking',listening:'listening',writing:'writing',reading:'reading',grammar:'writing'};
+    if (m[id]) S.skills[m[id]]=Math.min(98,S.skills[m[id]]+1);
+    toast('Activité cochée ! 🎉');
+  }
+  sv(S); renderActivities(); renderSkillBars(); updateStats();
+}
+
+function renderSkillBars() {
+  document.getElementById('skill-bars').innerHTML = SKILLS_DEF.map(s=>{
+    const v=S.skills[s.id]||0;
+    return `<div class="skill-bar-card" onclick="boostSkill('${s.id}')">
+      <div class="sb-top"><div class="sb-name"><span>${s.icon}</span>${s.label}</div>
+      <span class="sb-pct" style="color:${s.color}">${v}%</span></div>
+      <div class="sb-track"><div class="sb-fill" style="width:${v}%;background:${s.color}"></div></div>
+      <div class="sb-hint">Cliquer pour +5% · objectif 75–85%</div></div>`;
+  }).join('');
+}
+
+function boostSkill(id) {
+  S.skills[id]=Math.min(98,S.skills[id]+5); sv(S); renderSkillBars();
+  toast(SKILLS_DEF.find(s=>s.id===id).label+' : '+S.skills[id]+'% 📈');
+}
+
+const notesEl = document.getElementById('daily-notes');
+notesEl.value = S.notes[todayKey]||'';
+function saveNotes() { S.notes[todayKey]=notesEl.value; sv(S); toast('Notes sauvegardées ✓'); }
+
+// PLAN
+function buildPlan() {
+  document.getElementById('month-tabs').innerHTML = MONTHS.map(m=>{
+    const done=!!S.monthsDone[m.n], cur=m.n===S.curMonth;
+    return `<button class="mo-btn ${done?'completed':cur?'current':''}" id="mo-tab-${m.n}" onclick="showMonth(${m.n})">${done?'✓ ':''}Mois ${m.n}</button>`;
+  }).join('');
+  document.getElementById('months-container').innerHTML = MONTHS.map(m=>`
+    <div class="month-panel" id="mo-panel-${m.n}">
+      <div class="mo-header"><div class="mo-num">0${m.n}</div>
+        <div><div class="mo-title">${m.title}</div><div class="mo-goal">${m.goal}</div></div></div>
+      <div class="skills-quad">
+        <div class="sq-card speak"><div class="sq-skill">🗣️ Speaking</div><ul class="sq-tasks">${m.speak.map(t=>`<li>${t}</li>`).join('')}</ul></div>
+        <div class="sq-card listen"><div class="sq-skill">👂 Listening</div><ul class="sq-tasks">${m.listen.map(t=>`<li>${t}</li>`).join('')}</ul></div>
+        <div class="sq-card read"><div class="sq-skill">📖 Reading</div><ul class="sq-tasks">${m.read.map(t=>`<li>${t}</li>`).join('')}</ul></div>
+        <div class="sq-card write"><div class="sq-skill">✍️ Writing</div><ul class="sq-tasks">${m.write.map(t=>`<li>${t}</li>`).join('')}</ul></div>
+      </div>
+      <div class="time-card"><div class="time-card-title">⏱ Budget temps journalier recommandé</div>
+        <div class="time-items">${m.time.map(t=>`<div class="ti"><span class="ti-amt" style="color:${t.c}">${t.t}</span><span class="ti-lbl">${t.l}</span></div>`).join('')}</div></div>
+      <div class="tools-card"><div class="tools-card-title">🔧 Outils recommandés ce mois</div>
+        <div class="tool-chips">${m.tools.map(t=>`<span class="tool-chip">${t}</span>`).join('')}</div></div>
+      <div class="mo-done-row">
+        <button class="btn-month-done ${S.monthsDone[m.n]?'done':''}" onclick="toggleMonthDone(${m.n})">
+          ${S.monthsDone[m.n]?'✓ Mois complété':'Marquer comme complété'}</button></div>
+    </div>`).join('');
+  showMonth(S.curMonth);
+}
+
+function showMonth(n) {
+  document.querySelectorAll('.month-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mo-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mo-panel-'+n)?.classList.add('active');
+  document.getElementById('mo-tab-'+n)?.classList.add('active');
+}
+
+function toggleMonthDone(n) {
+  if (S.monthsDone[n]) { delete S.monthsDone[n]; } else {
+    S.monthsDone[n]=true;
+    if (n===S.curMonth&&n<6) S.curMonth=n+1;
+    toast('Mois '+n+' terminé ! 🏆');
+  }
+  sv(S); buildPlan();
+}
+
+// VOCAB
+function addWord() {
+  const w=document.getElementById('vi-word').value.trim();
+  const d=document.getElementById('vi-def').value.trim();
+  if (!w) return;
+  S.words.push({w,d,date:todayKey}); sv(S);
+  document.getElementById('vi-word').value='';
+  document.getElementById('vi-def').value='';
+  renderVocab(); updateStats(); toast('"'+w+'" ajouté ! 📚');
+}
+
+function removeWord(i) { S.words.splice(i,1); sv(S); renderVocab(); updateStats(); }
+
+function renderVocab() {
+  document.getElementById('vocab-count').textContent = S.words.length+' mot(s) enregistré(s)';
+  document.getElementById('vocab-chips').innerHTML = [...S.words].reverse().slice(0,60).map((item,ri)=>{
+    const idx=S.words.length-1-ri;
+    return `<div class="vchip"><span class="vw">${item.w}</span>${item.d?`<span class="vd">— ${item.d}</span>`:''}<span class="vdel" onclick="removeWord(${idx})">✕</span></div>`;
+  }).join('');
+}
+
+document.getElementById('vi-word').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('vi-def').focus();});
+document.getElementById('vi-def').addEventListener('keydown',e=>{if(e.key==='Enter')addWord();});
+
+// IMMERSION
+function renderImmersion() {
+  document.getElementById('imm-grid').innerHTML = IMMERSION.map(im=>`
+    <div class="imm-card ${S.immersion[im.id]?'on':''}" onclick="toggleImm('${im.id}')">
+      <div class="imm-ico">${im.icon}</div><div class="imm-name">${im.name}</div>
+      <div class="imm-desc">${im.desc}</div><div class="imm-on">✓ Activé</div></div>`).join('');
+}
+
+function toggleImm(id) {
+  S.immersion[id]=!S.immersion[id]; sv(S); renderImmersion();
+  toast(S.immersion[id]?'Habitude activée 🌍':'Habitude désactivée');
+}
+
+function toast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// BOOT
+renderWeek(); renderActivities(); renderSkillBars(); renderVocab(); renderImmersion(); buildPlan(); updateStats(); updateStreak();
+setTimeout(()=>{
+  document.querySelectorAll('.sb-fill').forEach(el=>{const w=el.style.width;el.style.width='0%';setTimeout(()=>{el.style.width=w;},80);});
+},200);
+</script>
+</body>
+</html>
